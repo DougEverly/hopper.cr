@@ -8,15 +8,15 @@ end
 class Hopper(T)
   def initialize(capacity = 10, @timeout = 2, @always = false, @exact = true, &@block : T -> Void)
     @running = false
-		@chan =  Channel(T | Control).new(capacity + 2)
-		@done = Channel(Control).new(1)
+    @chan = Channel(T | Control).new(capacity + 2)
+    @done = Channel(Control).new(1)
     run
   end
 
-	def self.start(capacity = 10, timeout = 2, always = false, exact = true, &block : T -> Void)
-		new(capacity, timeout, always, exact, &block)
-	end
-	
+  def self.start(capacity = 10, timeout = 2, always = false, exact = true, &block : T -> Void)
+    new(capacity, timeout, always, exact, &block)
+  end
+
   def start
     @chan.send(Control::Start)
   end
@@ -32,13 +32,13 @@ class Hopper(T)
         when T
           @block.call(value)
         when Control
-					if value == Control::Stop
-						@chan.close
-					end
+          if value == Control::Stop
+            @chan.close
+          end
         else
         end
         if @chan.empty? && @chan.closed?
-					@done.send(Control::Stop)
+          @done.send(Control::Stop)
           break
         end
       end
@@ -55,10 +55,11 @@ class Hopper(T)
   end
 
   def wait
-    		v = @done.receive
+    v = @done.receive
   end
-	def shutdown
-		stop
-		wait
-	end
+
+  def shutdown
+    stop
+    wait
+  end
 end
