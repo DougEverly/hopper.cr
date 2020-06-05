@@ -4,7 +4,7 @@ describe "Hopper" do
   # TODO: Write tests
 
   it "initalizes" do
-    hopper = Hopper(String).new(10)
+    hopper = Hopper(String).new(10) { }
     true
   end
 end
